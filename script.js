@@ -109,9 +109,9 @@ loginForm.addEventListener('submit', async (e) => {
             // Store user data and token in localStorage
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('token', data.token);
-            // Redirect to dashboard or home page
+            // Redirect to StudyCast website
             setTimeout(() => {
-                window.location.href = '/dashboard.html';
+                window.location.href = 'https://studycast-1.onrender.com/';
             }, 2000);
         } else {
             showMessage(data.message || 'Login failed', 'error');
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user && token) {
         showMessage('You are already logged in. Redirecting...', 'success');
         setTimeout(() => {
-            window.location.href = '/dashboard.html';
+            window.location.href = 'https://studycast-1.onrender.com/';
         }, 2000);
     }
 });

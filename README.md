@@ -168,7 +168,7 @@ studycast-login/
 
 1. Enter your email and password
 2. Click "Login" button
-3. Upon successful login, you'll be redirected to the dashboard
+3. Upon successful login, you'll be redirected to the StudyCast website (https://studycast-1.onrender.com/)
 4. Your session will be maintained until you logout
 
 ### Dashboard
