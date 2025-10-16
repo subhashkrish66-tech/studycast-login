@@ -11,12 +11,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:3000',
+        'https://studycast-1.onrender.com',
+        /https:\/\/studycast-login-.*\.vercel\.app$/
+    ]
+}));
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
-const MONGODB_URI = 'mongodb+srv://subhashkrishna:Kondamuri%401@cluster0.qt4xf.mongodb.net/studycast';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://subhashkrishna:Kondamuri%401@cluster0.qt4xf.mongodb.net/studycast';
 
 mongoose.connect(MONGODB_URI)
 .then(() => {
@@ -96,7 +102,7 @@ const authenticateToken = (req, res, next) => {
 
 // Serve the main page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Signup route
@@ -246,7 +252,7 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
 
 // Simple dashboard page
 app.get('/dashboard.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
 // Logout route (optional - mainly for clearing client-side tokens)
@@ -271,8 +277,12 @@ app.use((req, res) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Visit http://localhost:${PORT} to view the application`);
-});
+// Export for serverless (Vercel). Only listen when running in a traditional server environment
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+        console.log(`Visit http://localhost:${PORT} to view the application`);
+    });
+}
+
+module.exports = app;
