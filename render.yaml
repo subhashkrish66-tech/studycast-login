@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: studycast-login
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: your-super-secret-jwt-key-change-this-in-production
+      - key: MONGODB_URI
+        value: mongodb+srv://subhashkrishna:Kondamuri%401@cluster0.qt4xf.mongodb.net/studycast
