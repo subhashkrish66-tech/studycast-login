@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyCast - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-header h1 {
+            color: #ff6600;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+        }
+        
+        .user-info {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(255, 165, 0, 0.1);
+        }
+        
+        .user-info h2 {
+            color: #ff6600;
+            margin-bottom: 20px;
+        }
+        
+        .user-details {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+        
+        .logout-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff6600, #ff8800);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #ff8800, #ffaa00);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 102, 0, 0.4);
+        }
+        
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #cccccc;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>StudyCast Dashboard</h1>
+                <div class="welcome-message">
+                    Welcome to your StudyCast account!
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <h2>User Information</h2>
+                <div class="user-details" id="userDetails">
+                    Loading user information...
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            if (!user || !token) {
+                alert('Please login first');
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                // Fetch user profile from server
+                const response = await fetch('/api/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayUserInfo(data.user);
+                } else {
+                    // Token might be expired, redirect to login
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                // Show cached user info
+                const cachedUser = JSON.parse(user);
+                displayUserInfo(cachedUser);
+            }
+        });
+        
+        function displayUserInfo(user) {
+            const userDetails = document.getElementById('userDetails');
+            userDetails.innerHTML = `
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>User ID:</strong> ${user.id}</p>
+                <p><strong>Member Since:</strong> ${new Date(user.createdAt).toLocaleDateString()}</p>
+            `;
+        }
+        
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            try {
+                await fetch('/api/logout', {
+                    method: 'POST'
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                // Clear local storage
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                
+                // Redirect to login page
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>
