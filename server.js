@@ -16,12 +16,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 // MongoDB Connection
-const MONGODB_URI = 'mongodb+srv://subhashkrish66_db_user:subhashkrish66_db_user@subhash1.uvonm7n.mongodb.net/studycast';
+const MONGODB_URI = 'mongodb+srv://subhashkrishna:Kondamuri%401@cluster0.qt4xf.mongodb.net/studycast';
 
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(MONGODB_URI)
 .then(() => {
     console.log('Connected to MongoDB successfully');
 })
