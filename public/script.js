@@ -111,7 +111,7 @@ loginForm.addEventListener('submit', async (e) => {
             localStorage.setItem('token', data.token);
             // Redirect to StudyCast website
             setTimeout(() => {
-                window.location.href = 'https://studycast-1.onrender.com/';
+                window.location.href = 'https://study-cast.vercel.app/';
             }, 2000);
         } else {
             showMessage(data.message || 'Login failed', 'error');
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user && token) {
         showMessage('You are already logged in. Redirecting...', 'success');
         setTimeout(() => {
-            window.location.href = 'https://studycast-1.onrender.com/';
+            window.location.href = 'https://study-cast.vercel.app/';
         }, 2000);
     }
 });
